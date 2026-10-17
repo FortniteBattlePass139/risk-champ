@@ -10,6 +10,7 @@ import { OutcomeHistogram, FatigueChart } from "@/components/parlay/Charts";
 import { MethodologySheet, ShareDialog, VerificationDialog } from "@/components/parlay/Modals";
 import {
   HORIZON_WEEKS,
+  DEFAULT_COEFFICIENTS,
   runSimulation,
   validateConfig,
   type Category,
@@ -210,7 +211,7 @@ function Index() {
                 <OutcomeHistogram view={view} />
               </Panel>
               <Panel title="16-week fatigue & workload trajectory">
-                <FatigueChart view={view} cap={cap} threshold={2} />
+                <FatigueChart view={view} cap={cap} threshold={DEFAULT_COEFFICIENTS.burnoutThreshold} />
               </Panel>
               <Panel title="Bottleneck analysis (counterfactual sensitivity)">
                 <p className="mb-3 text-[11px] text-muted-foreground">Change in full-survival rate if each leg is removed, using the same random numbers. Model-based estimate, not proof of cause.</p>
