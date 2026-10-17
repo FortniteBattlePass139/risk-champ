@@ -58,9 +58,9 @@ function Panel({ title, children, right }: { title: string; children: React.Reac
 }
 
 function Index() {
-  const [legs, setLegs] = useState<Leg[]>(() => PRESETS[0].legs.map((l) => ({ ...l })));
-  const [deps, setDeps] = useState<Dependency[]>(() => PRESETS[0].dependencies.map((d) => ({ ...d })));
-  const [activePreset, setActivePreset] = useState<string | null>(PRESETS[0].id);
+  const [legs, setLegs] = useState<Leg[]>(() => PRESETS[0]!.legs.map((l) => ({ ...l })));
+  const [deps, setDeps] = useState<Dependency[]>(() => PRESETS[0]!.dependencies.map((d) => ({ ...d })));
+  const [activePreset, setActivePreset] = useState<string | null>(PRESETS[0]!.id);
   const [cap, setCap] = useState(50);
   const [chaos, setChaos] = useState(0.1);
   const [seed, setSeed] = useState(1234);
@@ -161,11 +161,11 @@ function Index() {
             <div className="space-y-4 text-sm">
               <label className="block">
                 <div className="mb-2 flex justify-between"><span>Weekly energy cap</span><span className="font-mono">{cap}h</span></div>
-                <Slider min={10} max={100} step={1} value={[cap]} onValueChange={([v]) => setCap(v)} />
+                <Slider min={10} max={100} step={1} value={[cap]} onValueChange={([v]) => setCap(v ?? 50)} />
               </label>
               <label className="block">
                 <div className="mb-2 flex justify-between"><span>Chaos / shock factor</span><span className="font-mono">{Math.round(chaos * 100)}%</span></div>
-                <Slider min={0} max={30} step={1} value={[chaos * 100]} onValueChange={([v]) => setChaos(v / 100)} />
+                <Slider min={0} max={30} step={1} value={[chaos * 100]} onValueChange={([v]) => setChaos((v ?? 0) / 100)} />
               </label>
               <div>
                 <div className="mb-2">PRNG seed</div>
@@ -294,7 +294,7 @@ function Kpi({ label, value, sub, tone }: { label: string; value: string; sub: s
   );
 }
 
-function LegEditor({ leg, simRate, onChange, onRemove }: { leg: Leg; simRate?: number; onChange: (p: Partial<Leg>) => void; onRemove: () => void }) {
+function LegEditor({ leg, simRate, onChange, onRemove }: { leg: Leg; simRate?: number | undefined; onChange: (p: Partial<Leg>) => void; onRemove: () => void }) {
   return (
     <div className="rounded-md border border-border bg-background p-3">
       <div className="mb-2 flex items-center gap-2">
@@ -306,13 +306,13 @@ function LegEditor({ leg, simRate, onChange, onRemove }: { leg: Leg; simRate?: n
         <span>sim win <span className={simRate !== undefined && simRate >= 0.5 ? "text-success" : "text-warning"}>{simRate !== undefined ? pct(simRate) : "—"}</span></span>
       </div>
       <Row label="Base prob" val={pct(leg.baseProbability, 0)}>
-        <Slider min={1} max={99} step={1} value={[Math.round(leg.baseProbability * 100)]} onValueChange={([v]) => onChange({ baseProbability: v / 100 })} />
+        <Slider min={1} max={99} step={1} value={[Math.round(leg.baseProbability * 100)]} onValueChange={([v]) => onChange({ baseProbability: (v ?? 50) / 100 })} />
       </Row>
       <Row label="Hours/wk" val={`${leg.weeklyHoursCost}h`}>
-        <Slider min={1} max={40} step={1} value={[leg.weeklyHoursCost]} onValueChange={([v]) => onChange({ weeklyHoursCost: v })} />
+        <Slider min={1} max={40} step={1} value={[leg.weeklyHoursCost]} onValueChange={([v]) => onChange({ weeklyHoursCost: v ?? leg.weeklyHoursCost })} />
       </Row>
       <Row label="Stress" val={`${leg.stressImpact}/10`}>
-        <Slider min={1} max={10} step={1} value={[leg.stressImpact]} onValueChange={([v]) => onChange({ stressImpact: v })} />
+        <Slider min={1} max={10} step={1} value={[leg.stressImpact]} onValueChange={([v]) => onChange({ stressImpact: v ?? leg.stressImpact })} />
       </Row>
       <Row label="Weeks" val={`W${leg.startWeek}–W${leg.endWeek}`}>
         <Slider min={1} max={HORIZON_WEEKS} step={1} minStepsBetweenThumbs={0} value={[leg.startWeek, leg.endWeek]} onValueChange={(v) => onChange({ startWeek: v[0] ?? leg.startWeek, endWeek: v[1] ?? leg.endWeek })} />

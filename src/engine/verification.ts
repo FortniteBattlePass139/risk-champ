@@ -17,8 +17,8 @@ export interface CheckResult {
 }
 
 const base = (): SimulationConfig => ({
-  legs: PRESETS[0].legs.map((l) => ({ ...l })),
-  dependencies: PRESETS[0].dependencies.map((d) => ({ ...d })),
+  legs: PRESETS[0]!.legs.map((l) => ({ ...l })),
+  dependencies: PRESETS[0]!.dependencies.map((d) => ({ ...d })),
   energyCap: 50,
   chaos: 0.1,
   seed: 1234,
@@ -48,7 +48,7 @@ export function runVerificationSuite(): CheckResult[] {
       if (!o.ok) return "run failed";
       const s = o.result.histogram.reduce((a, b) => a + b.count, 0);
       const fullBin = o.result.histogram.find((h) => h.kind === "full")!.count;
-      const burnBin = o.result.histogram[0].count;
+      const burnBin = o.result.histogram[0]!.count;
       if (s !== 10000) return `sum = ${s}`;
       if (fullBin !== o.result.successCount) return "full bin ≠ success count";
       if (burnBin !== o.result.burnoutCount) return "burnout bin ≠ burnout count";
@@ -142,12 +142,12 @@ export function runVerificationSuite(): CheckResult[] {
       const b = runSimulation(reduced);
       if (!a.ok || !b.ok) return "run failed";
       // MVP (15h, weeks 1-10) removed ⇒ mean workload in week 1 must drop
-      const drop = a.result.weekly[0].meanWorkload - b.result.weekly[0].meanWorkload;
+      const drop = a.result.weekly[0]!.meanWorkload - b.result.weekly[0]!.meanWorkload;
       return (drop > 10 && b.result.legIds.length === 4) || `workload drop ${drop.toFixed(2)}`;
     }),
     check(10, "Errors produce no fabricated fallback data", () => {
       const c = base();
-      c.legs[0] = { ...c.legs[0], baseProbability: 5 };
+      c.legs[0] = { ...c.legs[0]!, baseProbability: 5 };
       const d = buildDashboard(runSimulation(c));
       return (
         (d.status === "error" && !("kpis" in d) && !("histogram" in d) && d.errors.length > 0) ||

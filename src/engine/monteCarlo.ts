@@ -256,7 +256,7 @@ export function removeLeg(cfg: SimulationConfig, legId: string): SimulationConfi
 function percentile(sorted: Float32Array, q: number): number {
   if (sorted.length === 0) return 0;
   const idx = Math.min(sorted.length - 1, Math.max(0, Math.ceil(q * sorted.length) - 1));
-  return sorted[idx];
+  return sorted[idx]!;
 }
 
 function simulateCore(cfg: SimulationConfig, order: string[], withWeekly: boolean) {
@@ -264,7 +264,7 @@ function simulateCore(cfg: SimulationConfig, order: string[], withWeekly: boolea
   const H = HORIZON_WEEKS;
   const c = { ...DEFAULT_COEFFICIENTS, ...(cfg.coefficients ?? {}) };
   const legIndex = new Map(cfg.legs.map((l, i) => [l.id, i]));
-  const ordered = order.map((id) => cfg.legs[legIndex.get(id)!]);
+  const ordered = order.map((id) => cfg.legs[legIndex.get(id)!]!);
   const L = ordered.length;
   const salts = ordered.map((l) => hashString(l.id));
 
@@ -282,7 +282,7 @@ function simulateCore(cfg: SimulationConfig, order: string[], withWeekly: boolea
       .map((d) => ({ ...d, trigIdx: order.indexOf(d.triggerLegId) })),
   );
   const byWeek: number[][] = Array.from({ length: H + 1 }, () => []);
-  ordered.forEach((l, i) => byWeek[resolveWeek.get(l.id)!].push(i));
+  ordered.forEach((l, i) => byWeek[resolveWeek.get(l.id)!]!.push(i));
 
   // per-week base hours + weighted stress (deterministic part)
   const baseHours = new Float64Array(H + 1);
@@ -331,14 +331,14 @@ function simulateCore(cfg: SimulationConfig, order: string[], withWeekly: boolea
       const shockHours = shock ? c.shockHoursMin + uSev * (c.shockHoursMax - c.shockHoursMin) : 0;
       const z = Math.sqrt(-2 * Math.log(1 - n1)) * Math.cos(2 * Math.PI * n2);
       const mult = Math.min(2, Math.max(0.5, 1 + c.workloadVariance * z));
-      const workload = mult * baseHours[w] + shockHours;
+      const workload = mult * baseHours[w]! + shockHours;
       const util = workload / cfg.energyCap;
       const overload = Math.max(0, util - 1);
       F = Math.max(
         0,
         F +
           c.overloadCoef * Math.pow(overload, c.overloadExponent) +
-          c.stressCoef * stressNorm[w] * util -
+          c.stressCoef * stressNorm[w]! * util -
           c.recoveryRate * Math.max(0, 1 - util),
       );
       if (withWeekly) {
@@ -349,8 +349,8 @@ function simulateCore(cfg: SimulationConfig, order: string[], withWeekly: boolea
         burnedAt = w;
         continue;
       }
-      for (const i of byWeek[w]) {
-        const leg = ordered[i];
+      for (const i of byWeek[w]!) {
+        const leg = ordered[i]!;
         let p =
           leg.baseProbability -
           c.maxFatiguePenalty *
@@ -358,7 +358,7 @@ function simulateCore(cfg: SimulationConfig, order: string[], withWeekly: boolea
             (0.5 + (0.5 * leg.stressImpact) / 10) -
           (shock ? c.shockPenalty : 0);
         let hardFail = false;
-        for (const d of incoming[i]) {
+        for (const d of incoming[i]!) {
           if (outcome[d.trigIdx] === 0) {
             if (d.dependencyType === "hard_prerequisite") hardFail = true;
             else p -= d.penaltyStrength;
