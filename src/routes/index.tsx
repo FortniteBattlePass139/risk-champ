@@ -315,7 +315,7 @@ function LegEditor({ leg, simRate, onChange, onRemove }: { leg: Leg; simRate?: n
         <Slider min={1} max={10} step={1} value={[leg.stressImpact]} onValueChange={([v]) => onChange({ stressImpact: v })} />
       </Row>
       <Row label="Weeks" val={`W${leg.startWeek}–W${leg.endWeek}`}>
-        <Slider min={1} max={HORIZON_WEEKS} step={1} minStepsBetweenThumbs={0} value={[leg.startWeek, leg.endWeek]} onValueChange={([a, b]) => onChange({ startWeek: a, endWeek: b })} />
+        <Slider min={1} max={HORIZON_WEEKS} step={1} minStepsBetweenThumbs={0} value={[leg.startWeek, leg.endWeek]} onValueChange={(v) => onChange({ startWeek: v[0] ?? leg.startWeek, endWeek: v[1] ?? leg.endWeek })} />
       </Row>
     </div>
   );
@@ -343,7 +343,7 @@ function DependencyEditor({ legs, deps, setDeps, legName }: { legs: Leg[]; deps:
     if (!trig || !aff) return setErr("Pick both legs.");
     const v = validateConfig({ legs, dependencies: [...deps, candidate], energyCap: 50, chaos: 0, seed: 1 });
     const depErr = v.errors.filter((e) => /cycle|depend|missing/i.test(e));
-    if (depErr.length) return setErr(depErr[0]);
+    if (depErr.length) return setErr(depErr[0] ?? "Invalid dependency");
     setErr(null);
     setDeps([...deps, candidate]);
   };
