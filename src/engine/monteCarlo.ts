@@ -367,7 +367,7 @@ function simulateCore(cfg: SimulationConfig, order: string[], withWeekly: boolea
         p = hardFail ? P_MIN : clampP(p);
         if (p > maxP) maxP = p;
         if (p < minP) minP = p;
-        const r = mulberry32(streamSeed(cfg.seed, u, salts[i]))();
+        const r = mulberry32(streamSeed(cfg.seed, u, salts[i]!))();
         outcome[i] = r < p ? 1 : 0;
       }
     }
@@ -423,8 +423,8 @@ export function runSimulation(
     let sw = 0;
     let sf = 0;
     for (let i = 0; i < N; i++) {
-      sw += wl[i];
-      sf += fa[i];
+      sw += wl[i]!;
+      sf += fa[i]!;
     }
     wl.sort();
     fa.sort();
