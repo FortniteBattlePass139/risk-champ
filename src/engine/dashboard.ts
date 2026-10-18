@@ -2,6 +2,7 @@ import {
   confidenceInterval95,
   formatAmericanOdds,
   formatDecimalOdds,
+  type SensitivityEntry,
   type SimulationOutcome,
   type SimulationResult,
 } from "./monteCarlo";
@@ -42,6 +43,7 @@ export interface DashboardView {
   histogram: SimulationResult["histogram"];
   weekly: SimulationResult["weekly"];
   sensitivity: SimulationResult["sensitivity"];
+  primaryBottleneck: SensitivityEntry | null;
   risk: RiskLevel;
   legSuccessRate: Record<string, number>;
 }
@@ -53,6 +55,10 @@ export function buildDashboard(outcome: SimulationOutcome): DashboardState {
   if (!outcome.ok) return { status: "error", errors: outcome.errors };
   const r = outcome.result;
   const n = r.iterations;
+  const primaryBottleneck =
+    r.sensitivity && r.sensitivity.length > 0
+      ? [...r.sensitivity].sort((a, b) => b.deltaPP - a.deltaPP)[0] ?? null
+      : null;
   return {
     status: "ok",
     sourceRunId: r.runId,
@@ -71,6 +77,7 @@ export function buildDashboard(outcome: SimulationOutcome): DashboardState {
     histogram: r.histogram,
     weekly: r.weekly,
     sensitivity: r.sensitivity,
+    primaryBottleneck,
     risk: riskLevel(r),
     legSuccessRate: r.legSuccessRate,
   };

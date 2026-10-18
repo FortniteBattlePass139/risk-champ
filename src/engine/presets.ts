@@ -26,11 +26,11 @@ export const PRESETS: Preset[] = [
     name: "Ingeniería + Side-Project + Gym",
     blurb: "5 legs · semestre con MVP y gimnasio",
     legs: [
-      leg("calc", "Pasar Cálculo/Física (6h/sem)", "Academic", 0.55, 6, 7, 1, 16),
-      leg("mvp", "Lanzar MVP funcional", "Tech/Infra", 0.65, 15, 6, 1, 10),
+      leg("calc", "Pasar Cálculo/Física (10h/sem)", "Academic", 0.55, 10, 7, 1, 16),
+      leg("mvp", "Lanzar MVP funcional", "Tech/Infra", 0.65, 20, 6, 1, 10),
       leg("gym", "Rutina de fuerza 4x/sem", "Health", 0.75, 6, 3, 1, 16),
-      leg("users", "Conseguir primeros usuarios", "Career", 0.35, 8, 6, 9, 16),
-      leg("sleep", "Dormir 7h diarias", "Health", 0.4, 2, 4, 1, 16),
+      leg("users", "Conseguir primeros usuarios", "Career", 0.35, 10, 6, 9, 16),
+      leg("sleep", "Dormir 7h diarias", "Health", 0.4, 4, 4, 1, 16),
     ],
     dependencies: [
       { id: "d1", triggerLegId: "mvp", affectedLegId: "users", dependencyType: "failure_penalty", penaltyStrength: 0.25 },
@@ -41,10 +41,10 @@ export const PRESETS: Preset[] = [
     name: "Bootstrapper / Indie Hacker Launch",
     blurb: "4 legs · lanzamiento de producto",
     legs: [
-      leg("dev", "Terminar desarrollo a tiempo", "Tech/Infra", 0.7, 25, 7, 1, 8),
-      leg("uptime", "0 caídas de servidor en el lanzamiento", "Tech/Infra", 0.8, 6, 6, 8, 10),
+      leg("dev", "Terminar desarrollo a tiempo", "Tech/Infra", 0.7, 28, 7, 1, 8),
+      leg("uptime", "0 caídas de servidor en el lanzamiento", "Tech/Infra", 0.8, 8, 6, 8, 10),
       leg("conv", "Conversión a pago > 3%", "Finance", 0.3, 12, 6, 9, 16),
-      leg("budget", "No quemar el presupuesto de API", "Finance", 0.85, 3, 4, 1, 16),
+      leg("budget", "No quemar el presupuesto de API", "Finance", 0.85, 4, 4, 1, 16),
     ],
     dependencies: [
       { id: "d1", triggerLegId: "dev", affectedLegId: "uptime", dependencyType: "failure_penalty", penaltyStrength: 0.2 },
@@ -58,8 +58,8 @@ export const PRESETS: Preset[] = [
     legs: [
       leg("thesis", "Entregar tesis/proyecto final", "Academic", 0.6, 18, 9, 1, 14),
       leg("exams", "Aprobar 3 exámenes finales", "Academic", 0.55, 14, 8, 10, 16),
-      leg("intern", "Conseguir pasantía", "Career", 0.4, 10, 7, 4, 12),
-      leg("job", "Oferta de trabajo post-pasantía", "Career", 0.3, 8, 7, 12, 16),
+      leg("intern", "Conseguir pasantía", "Career", 0.4, 12, 7, 4, 12),
+      leg("job", "Oferta de trabajo post-pasantía", "Career", 0.3, 10, 7, 12, 16),
     ],
     dependencies: [
       { id: "d1", triggerLegId: "thesis", affectedLegId: "exams", dependencyType: "failure_penalty", penaltyStrength: 0.2 },

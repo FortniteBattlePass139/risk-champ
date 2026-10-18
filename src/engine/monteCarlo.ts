@@ -77,11 +77,11 @@ export interface ModelCoefficients {
 }
 
 export const DEFAULT_COEFFICIENTS: ModelCoefficients = {
-  overloadCoef: 1.2,
-  overloadExponent: 1.5,
+  overloadCoef: 1.6,
+  overloadExponent: 1.4,
   stressCoef: 0.08,
   recoveryRate: 0.35,
-  burnoutThreshold: 2.0,
+  burnoutThreshold: 1.0,
   maxFatiguePenalty: 0.35,
   fatigueScale: 1.0,
   shockPenalty: 0.1,
